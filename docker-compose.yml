@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+    php-apache-environment:
+        container_name: php-apache
+        build:
+            context: .
+            dockerfile: Dockerfile
+        depends_on:
+            - db
+        volumes:
+            - .:/var/www/html/
+        ports:
+            - 84:80
+        networks:
+            - backend
+    db:
+        container_name: db
+        image: mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: 1234
+            MYSQL_DATABASE: mig
+            MYSQL_USER: mrrabbit
+            MYSQL_PASSWORD: 1234
+        ports:
+            - "9906:3306"
+        networks:
+            - backend
+    redis:
+        container_name: redis
+        image: redis:5.0.4
+
+        ports:
+            - "6380:6379"
+        networks:
+            - backend
+networks:
+    backend:
+      name: backend
